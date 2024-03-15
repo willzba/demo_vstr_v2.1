@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: barrera
+Build-Jdk: 17.0.10
+Implementation-Title: demo_vstr_2-2
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.vstr2-2
+Implementation-URL: https://spring.io/projects/spring-boot/herramienta-w
+ eb-vstr
+Created-By: Maven Integration for Eclipse
+

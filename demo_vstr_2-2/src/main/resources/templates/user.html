@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pagina Inicio usuario</title>
+
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" th:href="@{/css/index_style.css}">
+    <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+    <link rel="stylesheet" th:href="@{/css/menuPerfil.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <i class="bx bx-menu" id="sidebarOpen"></i>
+            <img th:src="@{/images/SSTR_logo-removebgcopia.png}" width="40" alt="logo">
+            V S T R
+        </div>
+        <div class="menu">
+            <i class="bx bx-user-circle"></i>
+            <button class="boton-desplegable"><span sec:authorize="isAuthenticated"><h5>[[${user.getFullname()}]]</h5></span></button>
+            <ul class="menu-desplegable">
+                <li><a href="#">Configurar</a></li>
+                <li><a href="#">Editar</a></li>
+                <li><a href="#">Agregar Web</a></li>
+            </ul>
+
+        </div>
+    </nav>
+    <nav class="sidebar">
+        <div class="menu_content">
+            <ul class="menu_items">
+                <li class="menu_item">
+                    <a th:href="@{/logout}" class="nav_link">
+                      <span class="navlink_icon">
+                        <i class="bx bx-home"></i>
+                      </span>
+                        <span class="navlink">Inicio</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a th:href="@{/dasboard}" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bxs-dashboard"></i>
+              </span>
+                        <span class="navlink">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a href="#" class="nav_link">
+                <span class="navlink_icon">
+                  <i class="bx bx-video"></i>
+                </span>
+                            <span class="navlink">Mis Videos</span>
+                        </a>
+                </li>
+                <li class="menu_item">
+                    <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-layer"></i>
+              </span>
+                        <span class="navlink">Services</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-cloud-upload"></i>
+              </span>
+                        <span class="navlink">Uploads</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a href="#" class="nav_link">
+              <span class="navlink_icon">
+                <i class="bx bx-share-alt"></i>
+              </span>
+                            <span class="navlink">Emitir Video</span>
+                        </a>
+                </li>
+            </ul>
+            <div class="menu_content">
+                <div class="menu_items" id="login">
+                    <a th:href="@{/logout}" class="nav_link">
+                <span class="navlink_icon">
+                    <i class="bx bx-log-out-circle"></i>
+                </span>
+                        <span class="navlink">login out</span>
+                    </a>
+                </div>
+            </div>
+            <div class="collapse_content">
+                <div class="collapse expand_sidebar">
+                    <span> Expand</span>
+                    <i class="bx bx-chevron-right"></i>
+                </div>
+                <div class="collapse collapse_sidebar">
+                    <span> Collapse</span>
+                    <i class="bx bx-chevron-left"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="contenidos">
+        <h1>Estrenos</h1>
+        <div class="con-scroll">
+            <div id="miCarrusel" class="carrusel">
+                <div class="slide">
+                    <img src="https://phantom-elmundo.unidadeditorial.es/6200fb89309fefeaa27b958e6294bf0e/resize/473/f/webp/assets/multimedia/imagenes/2022/07/30/16591757825079.jpg" alt="Imagen 1">
+                </div>
+                <div class="slide">
+                    <img src="https://media.revistagq.com/photos/63e4f125df9a2fddd35516fc/16:9/w_1600,c_limit/peliculas-disney-secuelas-toy-story-frozen.jpg" alt="Imagen 2">
+                </div>
+                <div class="slide">
+                    <img src="https://www.clara.es/medio/2022/06/07/mejores-peliculas-romanticas-1225_d01b6bfc_1225x740.jpg" alt="Imagen 3">
+                </div>
+            </div>
+            <button id="siguiente"><i class="bx bx-chevron-right"></i></button>
+            <button id="anterior"><i class="bx bx-chevron-left"></i></button>
+        </div>
+    </section>
+
+
+    <script th:src="@{/js/sidebar.js}"></script>
+    <script th:src="@{/js/ContenidoIndex.js}"></script>
+    <script th:src="@{/js/menuPerfil.js}"></script>
+</body>
+</html>

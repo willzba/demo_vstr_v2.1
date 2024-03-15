@@ -1,0 +1,48 @@
+.menu {
+    position: relative;
+    display: inline-block;
+    padding-right: 85px;
+    padding-top: 10px;
+}
+
+.boton-desplegable {
+    background: none;
+    border-color: #fff;
+    border-bottom: solid;
+    border-width: 2px;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.menu-desplegable {
+    display: none;
+    position: absolute;
+    background: rgba(27, 79, 114, 0.9);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #154360;
+    right: 0;
+    top: 0;
+}
+
+.menu-desplegable li {
+    padding: 10px;
+    border-bottom: none;
+}
+
+.menu-desplegable a {
+    text-decoration: none;
+    color: #fff;
+    opacity: 2;
+    display: block;
+    border-radius: 10%;
+    margin: 5px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.menu-desplegable li:last-child {
+    border-bottom: none;
+    border-radius: none;
+}
