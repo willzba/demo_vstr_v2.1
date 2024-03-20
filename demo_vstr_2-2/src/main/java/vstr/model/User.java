@@ -1,11 +1,8 @@
 package vstr.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
+
+import java.util.Collection;
 
 @Entity
 @Table(name="users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -14,25 +11,48 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	private String fullname;
 	
 	private String email;
 	
 	private String password;
-	
-	private String role;
-	
-	private String fullname;
+
+	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "usuarios_roles",
+			joinColumns = @JoinColumn(name = "usuario_id",referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "rol_id",referencedColumnName = "id")
+	)
+	private Collection<Role> roles;
 
 	public User() {
-		super();
 	}
 
-	public User(String email, String password, String role, String fullname) {
-		super();
+	public User(Long id, String fullname, String email, String password, Collection<Role> roles) {
+		this.id = id;
+		this.fullname = fullname;
 		this.email = email;
 		this.password = password;
-		this.role = role;
+		this.roles = roles;
+	}
+
+	public User(String fullname, String email, String password, Collection<Role> roles) {
 		this.fullname = fullname;
+		this.email = email;
+		this.password = password;
+		this.roles = roles;
+	}
+
+	public void addRole(Role role) {
+		roles.add(role);
+		role.getUsers().add(this);
+	}
+
+	// Método para eliminar un rol del usuario
+	public void removeRole(Role role) {
+		roles.remove(role);
+		role.getUsers().add(this);
 	}
 
 	public Long getId() {
@@ -59,12 +79,12 @@ public class User {
 		this.password = password;
 	}
 
-	public String getRole() {
-		return role;
+	public Collection<Role> getRoles() {
+		return roles;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setRoles(Collection<Role> roles) {
+		this.roles = roles;
 	}
 
 	public String getFullname() {
@@ -74,8 +94,4 @@ public class User {
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
-	
-	
-
-
 }

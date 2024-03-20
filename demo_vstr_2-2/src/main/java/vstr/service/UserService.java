@@ -1,9 +1,13 @@
 package vstr.service;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import vstr.dto.UserDto;
 import vstr.model.User;
 
-public interface UserService {
+import java.util.List;
 
-	User save(UserDto userDto);
+public interface UserService  {
+
+	 User save(UserDto userDto);
+
 }

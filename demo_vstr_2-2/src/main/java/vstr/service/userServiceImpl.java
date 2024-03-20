@@ -5,8 +5,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import vstr.dto.UserDto;
+import vstr.model.Role;
 import vstr.model.User;
 import vstr.repository.UserRepository;
+import vstr.repository.UserRoleRepository;
+
+import java.util.Arrays;
 
 @Service
 public class userServiceImpl implements UserService{
@@ -17,10 +21,19 @@ public class userServiceImpl implements UserService{
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	UserRoleRepository roleRepository;
+
 	@Override
 	public User save(UserDto userDto) {
-		User user= new User(userDto.getEmail(),passwordEncoder.encode( userDto.getPassword()),userDto.getRole(),userDto.getFullname());
+		// Buscar el rol predeterminado
+		Role defaultRole = roleRepository.findByName("USER");
+
+		// Verificar si el rol predeterminado existe
+		if (defaultRole == null) {
+			throw new IllegalStateException("El rol predeterminado 'USER' no está configurado en la base de datos.");
+		}
+		User user= new User(userDto.getFullname(),userDto.getEmail(),passwordEncoder.encode( userDto.getPassword()), Arrays.asList(defaultRole));
 		return userRepository.save(user);
 	}
-	
 }

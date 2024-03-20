@@ -3,6 +3,7 @@ package vstr.service;
 import java.io.IOException;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler{
 		// TODO Auto-generated method stub
 		
 		var authourities = authentication.getAuthorities();
-		var roles = authourities.stream().map(r -> r.getAuthority()).findFirst();
+		var roles = authourities.stream().map(GrantedAuthority::getAuthority).findFirst();
 		
 		if (roles.orElse("").equals("ADMIN")) {
 			response.sendRedirect("/admin-page");
@@ -28,8 +29,5 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler{
 		} else {
 			response.sendRedirect("/error");
 		}
-		
-		
 	}
-
 }

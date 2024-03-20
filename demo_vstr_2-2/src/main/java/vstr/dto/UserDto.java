@@ -2,16 +2,25 @@ package vstr.dto;
 
 public class UserDto {
 
+	private String fullname;
+
 	private String email;
+
 	private String password;
 	private String role;
-	private String fullname;
-	
-	public UserDto(String email, String password, String role, String fullname) {
-		super();
+
+	public UserDto(String fullname, String email, String password, String role) {
+		this.fullname = fullname;
 		this.email = email;
 		this.password = password;
 		this.role = role;
+	}
+
+	public String getFullname() {
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}
 
@@ -38,15 +47,4 @@ public class UserDto {
 	public void setRole(String role) {
 		this.role = role;
 	}
-
-	public String getFullname() {
-		return fullname;
-	}
-
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
-	}
-	
-	
-	
 }
