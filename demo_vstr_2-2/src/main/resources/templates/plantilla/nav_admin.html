@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="nav_admin">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{../css/style_nav_admin.css}">
+    <title>plantilla admin nav</title>
+</head>
+<body>
+    <nav th:fragment="nav_admin" class="nav">
+        <div class="nav__container">
+            <h1 class="nav__title"> ADMIN <span class="welcome">Bienvenido</span></h1>
+            <a href="#menu" class="nav__menu">
+                <i class="ri-menu-line"></i>
+            </a>
+            <a href="#" class="nav__menu nav__menu--second">
+                <i class="ri-close-line"></i>
+            </a>
+
+            <ul class="dropdown" id="menu">
+                <li class="dropdown__list">
+                    <a href="" class="dropdown__link">
+                        <i class="ri-home-line "></i>
+                        <span class="dropdown_span">Inicio</span>
+                    </a>
+                </li>
+                <li class="dropdown__list">
+                    <a href="#" class="dropdown__link">
+                        <i class="ri-projector-line"></i>
+                        <span class="dropdown_span">Lista de Usuarios</span>
+                        <i class="ri-arrow-down-line"></i>
+
+                        <input type="checkbox" class="dropdown__check">
+                    </a>
+                    <div class="dropdown__content">
+
+                        <ul class="dropdown__sub">
+
+                            <li class="dropdown__li">
+                                <a href="#" class="dropdown__anchor">Ver Usuarios VSTR</a>
+                            </li>
+                            <li class="dropdown__li">
+                                <a href="#" class="dropdown__anchor">Editar privilegios</a>
+                            </li>
+                            <li class="dropdown__li">
+                                <a href="#" class="dropdown__anchor">Eliminar Usuarios</a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </li>
+
+                <li class="dropdown__list">
+                    <a href="#" class="dropdown__link">
+                        <i class="ri-mail-line"></i>
+                        <span class="dropdown__span">Contacto</span>
+                        <i class="ri-arrow-down-line"></i>
+
+                        <input type="checkbox" class="dropdown__check">
+                    </a>
+
+                    <div class="dropdown__content">
+
+                        <ul class="dropdown__sub">
+
+                            <li class="dropdown__li">
+                                <a href="#" class="dropdown__anchor">Email</a>
+                            </li>
+                            <li class="dropdown__li">
+                                <a href="#" class="dropdown__anchor">Chat</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                <li class="dropdown__list">
+                    <a href="#" class="dropdown__link">
+                        <i class="ri-question-line"></i>
+                        <span class="dropdown__span">Ayuda</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+</body>
+</html>

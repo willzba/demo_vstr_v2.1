@@ -13,9 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import vstr.service.CustomSuccessHandler;
-import vstr.service.CustomerUserDetail;
 import vstr.service.CustomerUserDetailService;
-
 
 @Configuration
 @EnableWebSecurity
@@ -37,9 +35,9 @@ public class ConfigurationSecurity {
 		
 		http.csrf(AbstractHttpConfigurer::disable)
 				
-				.authorizeHttpRequests(request -> request.requestMatchers("/admin-page")
-						.hasAuthority("ADMIN").requestMatchers("/user-page").hasAuthority("USER")
-						.requestMatchers("/registration", "/css/**").permitAll()
+				.authorizeHttpRequests(request -> request.requestMatchers("/admin-page","/nav_admin")
+						.hasAuthority("ADMIN").requestMatchers("/user-page","/nav_user").hasAuthority("USER")
+						.requestMatchers("/registration", "/css/**","/verify","/verify_success").permitAll()
 						.anyRequest().authenticated())
 				
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")

@@ -3,6 +3,7 @@ package vstr.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import vstr.model.Role;
+import vstr.model.User;
 
 @Repository
 public interface UserRoleRepository extends JpaRepository<Role, Long> {

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:fragment="nav_user">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+    <title>Navegador Usuario</title>
+
+    <link rel="stylesheet" th:href="@{/css/index_style.css}">
+    <link rel="stylesheet" th:href="@{/css/menuPerfil.css}">
+</head>
+<body>
+
+    <nav th:fragment="nav_user" class="navbar">
+        <div class="logo">
+            <i class="bx bx-menu" id="sidebarOpen"></i>
+            <img th:src="@{/images/SSTR_logo-removebgcopia.png}" width="40" alt="logo">
+            V S T R
+        </div>
+        <div class="menu">
+            <i class="bx bx-user-circle"></i>
+            <button class="boton-desplegable"><span sec:authorize="isAuthenticated"><h5>[[${user.getFullname()}]]</h5></span></button>
+            <ul class="menu-desplegable">
+                <li><a href="#">Configurar</a></li>
+                <li><a href="#">Editar</a></li>
+                <li><a href="#">Agregar Web</a></li>
+            </ul>
+
+        </div>
+    </nav>
+    <nav th:fragment="nav_user" class="sidebar">
+        <div class="menu_content">
+            <ul class="menu_items">
+                <li class="menu_item">
+                    <a th:href="@{user-page}" class="nav_link">
+                          <span class="navlink_icon">
+                            <i class="bx bx-home"></i>
+                          </span>
+                        <span class="navlink">Inicio</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a th:href="@{/dasboard}" class="nav_link">
+                  <span class="navlink_icon">
+                    <i class="bx bxs-dashboard"></i>
+                  </span>
+                        <span class="navlink">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a href="#" class="nav_link">
+                    <span class="navlink_icon">
+                      <i class="bx bx-video"></i>
+                    </span>
+                        <span class="navlink">Mis Videos</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a href="#" class="nav_link">
+                  <span class="navlink_icon">
+                    <i class="bx bx-layer"></i>
+                  </span>
+                        <span class="navlink">Services</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a href="#" class="nav_link">
+                  <span class="navlink_icon">
+                    <i class="bx bx-cloud-upload"></i>
+                  </span>
+                        <span class="navlink">Uploads</span>
+                    </a>
+                </li>
+                <li class="menu_item">
+                    <a href="#" class="nav_link">
+                  <span class="navlink_icon">
+                    <i class="bx bx-share-alt"></i>
+                  </span>
+                        <span class="navlink">Emitir Video</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="menu_content">
+                <div class="menu_items" id="login">
+                    <a th:href="@{/logout}" class="nav_link">
+                    <span class="navlink_icon">
+                        <i class="bx bx-log-out-circle"></i>
+                    </span>
+                        <span class="navlink">login out</span>
+                    </a>
+                </div>
+            </div>
+            <div class="collapse_content">
+                <div class="collapse expand_sidebar">
+                    <span> Expand</span>
+                    <i class="bx bx-chevron-right"></i>
+                </div>
+                <div class="collapse collapse_sidebar">
+                    <span> Collapse</span>
+                    <i class="bx bx-chevron-left"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<script th:fragment="nav_user" th:src="@{/js/sidebar.js}"></script>
+<script th:fragment="nav_user" th:src="@{/js/menuPerfil.js}"></script>
+</body>
+</html>

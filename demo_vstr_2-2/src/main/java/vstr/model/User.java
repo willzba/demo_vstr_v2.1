@@ -2,6 +2,8 @@ package vstr.model;
 
 import jakarta.persistence.*;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 
 @Entity
@@ -13,7 +15,10 @@ public class User {
 	private Long id;
 
 	private String fullname;
-	
+
+	@NotBlank(message = "El correo electrónico es obligatorio")
+	@Email(message = "Formato de correo electrónico inválido")
+	@Column(unique = true)
 	private String email;
 	
 	private String password;
@@ -25,6 +30,7 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "rol_id",referencedColumnName = "id")
 	)
 	private Collection<Role> roles;
+
 
 	public User() {
 	}
