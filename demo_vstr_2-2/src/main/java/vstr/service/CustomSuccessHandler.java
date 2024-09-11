@@ -11,6 +11,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Custom success handler for Spring Security that redirects authenticated users
+ * to specific pages based on their roles.
+ *
+ * This class implements AuthenticationSuccessHandler and overrides
+ * the onAuthenticationSuccess method to specify custom behavior upon authentication success.
+ *
+ * The class handles redirection for users with different roles:
+ * - Users with the "ADMIN" role are redirected to /admin-page.
+ * - Users with the "USER" role are redirected to /user-page.
+ * - Users with no specified role are redirected to /error.
+ */
 @Service
 public class CustomSuccessHandler implements AuthenticationSuccessHandler{
 

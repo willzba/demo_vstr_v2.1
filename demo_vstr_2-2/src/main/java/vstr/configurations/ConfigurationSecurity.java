@@ -15,6 +15,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import vstr.service.CustomSuccessHandler;
 import vstr.service.CustomerUserDetailService;
 
+/**
+ * Configuration class that sets up security settings for the application.
+ * Uses Spring Security annotations to configure authentication and authorization.
+ */
 @Configuration
 @EnableWebSecurity
 public class ConfigurationSecurity {
@@ -36,7 +40,7 @@ public class ConfigurationSecurity {
 		http.csrf(AbstractHttpConfigurer::disable)
 				
 				.authorizeHttpRequests(request -> request.requestMatchers("/admin-page","/nav_admin")
-						.hasAuthority("ADMIN").requestMatchers("/user-page","/nav_user").hasAuthority("USER")
+						.hasAuthority("ADMIN").requestMatchers("/user-page","/nav_user","/user_page/**").hasAuthority("USER")
 						.requestMatchers("/registration", "/css/**","/verify","/verify_success").permitAll()
 						.anyRequest().authenticated())
 				

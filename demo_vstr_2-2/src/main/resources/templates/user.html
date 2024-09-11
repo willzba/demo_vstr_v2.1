@@ -6,12 +6,67 @@
 
     <title>Pagina Inicio usuario</title>
     <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+
+
+    <style>
+        #welcomeBanner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            z-index: 1000;
+
+        }
+
+         /* Estilos aquí */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro más opaco */
+            z-index: 999; /* Asegura que el overlay esté por encima de todo */
+        }
+        #mensaje {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff; /* Fondo del mensaje más claro */
+            color: #333; /* Color del texto más oscuro */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000; /* Asegura que el mensaje esté por encima del overlay */
+        }
+    </style>
 </head>
 <body>
 
 <nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
 <section class="contenidos">
-        <h1>Estrenos</h1>
+    <div id="welcomeBanner">
+        ¡Bienvenido a VSTR "Tú aplicacion de transmición"!
+    </div>
+
+    <div id="overlay"></div>
+
+    <div id="mensaje" >
+        <p id="mensaje-texto"></p>
+    </div>
+
+    <h1>Página de contenidos y transmisiones</h1>
         <div class="con-scroll">
             <div id="miCarrusel" class="carrusel">
                 <div class="slide">
@@ -27,8 +82,63 @@
             <button id="siguiente"><i class="bx bx-chevron-right"></i></button>
             <button id="anterior"><i class="bx bx-chevron-left"></i></button>
         </div>
+    <br> <br>
+    <hr>En esta seccion se mostraran Usuarios que estan transmitiendo y en que plataforma,
+    <br>este solo es una seccion de informacion, el usuario que tranmite podra poner el link de acceso donde
+    <br>
+    <hr> la pueden visializar.
+    <hr>En futuras actulización se podra ver en esta seccion las transmisiones.
     </section>
 
-    <script th:src="@{/js/ContenidoIndex.js}"></script>
+
+<script th:inline="javascript">
+    /* <![CDATA[ */
+    document.addEventListener('DOMContentLoaded', function() {
+        var welcomeBanner = document.getElementById('welcomeBanner');
+
+        // Ocultar la cartelera después de 5 segundos
+        setTimeout(function() {
+            welcomeBanner.style.display = 'none';
+        }, 5000);
+
+        // Ocultar la cartelera al hacer clic en cualquier parte de la página
+        document.addEventListener('click', function() {
+            welcomeBanner.style.display = 'none';
+        });
+    });
+    /* ]]> */
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', function() {
+        var enlaces = document.querySelectorAll('.mostrar-mensaje');
+        var mensaje = document.getElementById('mensaje');
+        var overlay = document.getElementById('overlay');
+        var mensajeTexto = document.getElementById('mensaje-texto');
+
+        enlaces.forEach(function(enlace) {
+            enlace.addEventListener('click', function(event) {
+                event.preventDefault(); // Evitar que el enlace haga la acción por defecto
+                mensajeTexto.textContent = this.getAttribute('data-mensaje'); // Actualizar el mensaje
+                mensaje.style.display = 'block';
+                overlay.style.display = 'block'; // Mostrar el overlay
+            });
+        });
+
+        window.addEventListener('click', function(event) {
+            if (!mensaje.contains(event.target) && !Array.from(enlaces).includes(event.target)) {
+                mensaje.style.display = 'none';
+                overlay.style.display = 'none'; // Ocultar el overlay
+            }
+        });
+    });
+    /*]]>*/
+</script>
+
+
+<script th:src="@{/js/ContenidoIndex.js}"></script>
+
+
 </body>
 </html>

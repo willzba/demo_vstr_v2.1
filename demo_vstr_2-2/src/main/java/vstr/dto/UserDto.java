@@ -1,5 +1,9 @@
 package vstr.dto;
 
+/**
+ * Data Transfer Object for User entity.
+ * This class is used to transfer data between the layers of the application.
+ */
 public class UserDto {
 
 	private String fullname;

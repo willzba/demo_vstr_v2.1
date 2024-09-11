@@ -29,13 +29,15 @@ import vstr.service.UserService;
 import vstr.service.VerificationService;
 import vstr.service.VerificationServiceImpl;
 
-
+/**
+ * Controller responsible for user registration, authentication, and verification.
+ */
 @Controller
 public class UserController {
-	
+
 	@Autowired
 	UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -47,7 +49,7 @@ public class UserController {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
- 
+
 	@GetMapping("/registration")
 	public String getRegistrationPage(@ModelAttribute("user") UserDto userDto) {
 		return "register";
@@ -94,7 +96,7 @@ public class UserController {
 			model.addAttribute("email", email);
 			return "verification_code"; // Vuelve a cargar la página de verificación con un mensaje de error
 		}
-    }
+	}
 
 	// Método para generar un OTP
 	private String generateOTP() {
@@ -141,7 +143,7 @@ public class UserController {
 			e.printStackTrace();
 		}
 
-    }
+	}
 
 	@PostMapping("/verifyOTP")
 	public ResponseEntity<String> verifyOTP (@RequestParam("email") String email, @RequestParam("otp") String otp){
@@ -190,6 +192,11 @@ public class UserController {
 		return "plantilla/nav_user";
 	}
 
+	@GetMapping("/dashboard")
+	public String dashboard() {
+		return "user_page/dashboard";
+	}
+
 	@GetMapping("/user-page")
 	public String userPage(Model model, Principal principal) {
 		String email = principal.getName(); // Obtener el correo electrónico del usuario autenticado
@@ -206,7 +213,7 @@ public class UserController {
 
 
 	@GetMapping("admin-page")
-		public String adminPage (Model model, Principal principal){
+	public String adminPage (Model model, Principal principal){
 		String email = principal.getName(); // Obtener el correo electrónico del usuario autenticado
 		boolean emailVerified = verificationService.isEmailVerified(email);
 		if (emailVerified) {
@@ -217,11 +224,17 @@ public class UserController {
 			model.addAttribute("error", "El correo electrónico no ha sido verificado");
 			return "login"; // Volver a cargar la página de inicio de sesión con un mensaje de error
 		}
-		}
+	}
 
 	@GetMapping("/nav_admin")
 	public String nav_admin() {
 		return "plantilla/nav_admin";
 	}
-	}
+
+	//cartelera de bienvenida
+
+
+}
+
+
 
