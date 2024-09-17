@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300&family=Playpen+Sans:wght@300;700&family=Tilt+Neon&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Tilt Neon', sans-serif;
+}
+:root {
+    --white: #154360;
+    --main-color: #EBF5FB;
+    --grey: #fff;
+    --light-grey: #aaa;
+  }
+  body {
+    /*background-image: linear-gradient(180deg, #f2bfff 0, #d5aeff 25%, #b99df2 50%, #9e8cd6 75%, #867bbc 100%);
+    */ background-color: #EAFAF1;
+    transition: all 0.5s ease;
+  }
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
+    background-color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 50px;
+    z-index: 1000;
+    box-shadow: 0 0 2px var(transparent);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--main-color);
+    border-radius: 10px solid #fff;
+  }
+  .logo h2{
+    color: #fff;
+    margin-left: 500px;
+  }
+  .sidebar {
+    background-color: var(--white);
+    width: 260px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 80px 20px;
+    z-index: 100;
+    overflow-y: scroll;
+    box-shadow: 0 0 1px var(--light-grey);
+    transition: all 0.5s ease;
+  }
+  .sidebar.close {
+    padding: 60px 0;
+    width: 80px;
+  }
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+  .menu_content {
+    position: relative;
+  }
+  .menu_content #login{
+    padding-top: 200px;
+  }
+  .menu_title {
+    margin: 15px 0;
+    padding: 0 20px;
+    font-size: 18px;
+  }
+  .sidebar.close .menu_title {
+    padding: 6px 30px;
+  }
+  .menu_title::before {
+    color: var(--grey);
+    white-space: nowrap;
+  }
+
+  .sidebar.close .menu_title::before {
+    content: "";
+    position: absolute;
+    height: 2px;
+    width: 18px;
+    border-radius: 12px;
+    background: var(--light-grey);
+  }
+  .menu_items {
+    padding: 0;
+    list-style: none;
+  }
+  .navlink_icon {
+    position: relative;
+    font-size: 22px;
+    min-width: 50px;
+    line-height: 40px;
+    display: inline-block;
+    text-align: center;
+    border-radius: 6px;
+  }
+  .navlink_icon::before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: calc(100% + 100px);
+    left: -20px;
+  }
+  .navlink_icon:hover {
+    background: var(--main-color);
+  }
+  .sidebar .nav_link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 4px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--grey);
+    white-space: nowrap;
+  }
+  .sidebar.close .navlink {
+    display: none;
+  }
+  .nav_link:hover {
+    color: var(--white);
+    background: var(--main-color);
+  }
+  .sidebar.close .nav_link:hover {
+    background: var(--white);
+  }
+
+  .collapse_content {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    width: 260px;
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+  .collapse {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    left: 0;
+    justify-content: space-around;
+    padding: 18px 0;
+    text-align: center;
+    width: 100%;
+    color: var(--grey);
+    border-top: 1px solid var(--light-grey);
+    background-color: var(--white);
+  }
+  .collapse i {
+    font-size: 20px;
+  }
+  .collapse span {
+    font-size: 18px;
+  }
+  .sidebar.close .collapse_content {
+    width: 50px;
+    left: 15px;
+  }
+  .sidebar.close .collapse span {
+    display: none;
+  }
+  .sidebar.hoverable .collapse_sidebar {
+    display: none;
+  }
+  #sidebarOpen {
+    display: none;
+  }
+  @media screen and (max-width: 768px) {
+    #sidebarOpen {
+      font-size: 25px;
+      display: block;
+      margin-right: 10px;
+      cursor: pointer;
+      color: var(--grey);
+    }
+    .sidebar.close {
+      left: -100%;
+    }
+    .sidebar.close .collapse_content {
+      left: -100%;
+    }
+  }
+
+  /*contenido*/
+    .contenidos {
+      display:grid;
+      justify-content:center;
+      align-items:center;
+      height: 68vh; /* Ajusta la altura según tus necesidades */
+    }
+    .con-scroll {
+      padding: auto;
+      height: 300px; /* Establece la altura que desees */
+      width: 300px;
+      overflow: auto;
+    }
+    .contenidos h1{
+      padding: 4rem;
+      padding-bottom: 0px;
+      text-align: center;
+    }

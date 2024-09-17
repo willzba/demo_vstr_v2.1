@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+</head>
+<body>
+
+<nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
+<section class="contenidos">
+    <div>
+        <h1>información de transmisiones</h1>
+        <span>Welcome, <span th:text="${user.fullname}"></span>!</span>
+
+    </div>
+    <br> <br>
+    <hr>En esta seccion se mostraran estadisticas,
+    <br>este solo es una seccion de informacion, hacerca de la transmision como puede ser la cantidad de ususarios conectados
+    <br>
+    <hr> y podran hacer analicis hacerca de los comentarios y demas.
+    <hr>En futuras actulización se agregan estas funciones.
+    </section>
+
+<script th:src="@{/js/ContenidoIndex.js}"></script>
+</body>
+</html>

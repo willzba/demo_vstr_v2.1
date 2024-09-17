@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" th:href="@{/css/normalize.css}">
+    <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css"
+    rel="stylesheet"/>    
+    <link rel="stylesheet" th:href="@{/css/registro.css}">
+      <link rel="stylesheet" th:href="@{/css/animateletra.css}">
+    <title>Registro de usuarios</title>
+  </head>
+  <body>
+    <!--NVBAR-->
+    <header class="header">
+      <nav class="navbar">
+        <a href="#">INÍCIO</a>
+        <a href="#">SOBRE NOSOSTROS</a>
+        <a href="#">¡ ENVIANOS UN MENSAJE !</a>
+      </nav>
+      <form action="" class="search-bar">
+        <input type="text" placeholder="Buscar..." />
+        <button>
+            <i class="ri-search-line"></i>
+        </button>
+        </form>
+    </header>
+
+    <!--LOGIN-->
+    <div class="background">
+        <img src="https://i.pinimg.com/564x/24/41/60/24416046889c9dc2750404cb642e735e.jpg" alt="fondo" class="fondo-registro">
+    </div>
+
+    <div class="container">
+        <div class="item">
+            <h2 class="logo"><img src="https://i.pinimg.com/736x/46/8c/02/468c02779a5de6b9601dde8b0bd9f551.jpg" alt="logo vstr" srcset="">VSTR</h2>
+            <div class="text-item">
+                <h2>Acceder! a,<br><span class="letra">Video Style Stream</span></h2>
+                <p>Una herramienta de edición de videos y almacenamiento en la nube que te permite crear y guardar contenido audiovisual para su posterior transmisión en tus plataformas favoritas.</p>
+                <div class="social-icon">
+                    <a href="#"><i class="ri-twitch-fill"></i></a>
+                    <a href="#"><i class="ri-youtube-fill"></i></a>
+                    <a href="#"><i class="ri-facebook-circle-fill"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="login-section">
+            <div class="form-box">
+                <form th:action="@{/login}" method="post">
+					
+                    <h2>Iniciar Sesión.</h2>
+                    
+                    <div class="message" th:if="${param.error}">
+			           Email o Contraseña invalido
+			        </div>
+			        <div class="message" th:if="${param.logout}">
+			           ¡Sesión finalizada!
+			        </div>
+                    <div class="message" th:if="${error}">
+                        <p class="verificationError">El correo electrónico no ha sido verificado.</p>
+                        <span class="message-Error">Por favor, verifica tu correo electrónico antes de iniciar sesión.</span>
+                    </div>
+                    
+                    <div class="input-box">
+                        <span class="icon"><i class="ri-mail-line"></i></span>
+                        <input type="email" id="username" name="username" required>
+                        <label for="username">Correo Electronico</label>
+                    </div>
+                    <div class="input-box">
+                        <span id="icon" class="icon"><i class="ri-lock-2-line" id="passwordIcon"></i></span>
+                        <input type="password" id="password" name="password" required>
+                        <label for="password">Contraseña</label>
+                    </div>
+                    <div class="remember-password">
+                        <label for="icon">
+                            <input type="checkbox">Recordar Contraseña.
+                        </label>
+                        <a href="#">Recuperar Contraseña.</a>
+                    </div>
+                    <button class="btn" type="submit">INGRESAR</button>
+                    <div class="create-account">
+                        <p>Quieres crear un nuevo usuario? <a th:href="@{/registration}" class="register-link">Ir a Registrame</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.getElementById('icon').addEventListener('click', function() {
+            var passwordInput = document.getElementById('password');
+            var icon = document.getElementById('passwordIcon');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('ri-lock-2-line');
+                icon.classList.add('ri-lock-unlock-line');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('ri-lock-unlock-line');
+                icon.classList.add('ri-lock-2-line');
+            }
+        });
+        /*]]>*/
+    </script>
+  </body>
+</html>

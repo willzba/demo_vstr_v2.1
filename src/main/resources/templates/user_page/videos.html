@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>videos</title>
+    <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+</head>
+<body>
+
+<nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
+<section class="contenidos">
+    <h1>Mis Videos</h1>
+    <a th:href="@{/upload-video}">Subir Nuevo Video</a>
+    <div th:if="${videos.isEmpty()}">
+        <p>No tienes videos.</p>
+    </div>
+    <div th:if="${not videos.isEmpty()}">
+        <ul>
+            <li th:each="video : ${videos}">
+                <video width="320" height="240" controls>
+                    <source th:src="@{${video.url}}" type="video/mp4">
+                    Tu navegador no soporta la etiqueta de video.
+                </video>
+                <p th:text="${video.title}">Título del Video</p>
+                <a th:href="@{/delete-video/{id}(id=${video.id})}">Eliminar</a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<script th:src="@{/js/ContenidoIndex.js}"></script>
+</body>
+</html>
