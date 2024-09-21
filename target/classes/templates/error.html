@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error - Página no encontrada</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      color: #343a40;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #dc3545;
+    }
+    p {
+      font-size: 1.2em;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+      p {
+        font-size: 1em;
+      }
+      .button {
+        font-size: 0.9em;
+        padding: 8px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>¡Oops! 😔</h1>
+  <p>Algo salió mal. No podemos procesar tu solicitud en este momento.</p>
+  <p>Por favor, vuelve a intentarlo más tarde.</p>
+
+  <a th:href="@{/user-page}" class="button">Volver a la página de inicio</a>
+</div>
+
+</body>
+</html>
+

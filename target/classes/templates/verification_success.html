@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Success Message</title>
     <style>
         body {
@@ -15,11 +16,13 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 400px;
+            width: 100%;
+            max-width: 400px;
             margin: 0 auto;
         }
         h2 {
             color: #007bff;
+            font-size: 2em;
         }
         p {
             margin-top: 20px;
@@ -39,13 +42,27 @@
         button:hover {
             background-color: #0056b3;
         }
+
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 1.8em;
+            }
+            p {
+                font-size: 16px;
+            }
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2>Verification Successful!</h2>
+    <h2>Verification Successful! 👌</h2>
     <p>Your account has been successfully verified.</p>
     <button onclick="window.location.href='/login'">Go to Login</button>
 </div>
 </body>
 </html>
+

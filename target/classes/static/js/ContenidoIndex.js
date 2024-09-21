@@ -1,4 +1,4 @@
-const carrusel = document.getElementById("miCarrusel");
+/*const carrusel = document.getElementById("miCarrusel");
 const anterior = document.getElementById("anterior");
 const siguiente = document.getElementById("siguiente");
 let slideIndex = 0;
@@ -25,4 +25,4 @@ siguiente.addEventListener("click", () => {
 });
 
 // Iniciar carrusel
-mostrarSlide(slideIndex);
+mostrarSlide(slideIndex);*/

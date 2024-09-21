@@ -57,40 +57,35 @@
 <nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
 <section class="contenidos">
     <div id="welcomeBanner">
-        ¡Bienvenido a VSTR "Tú aplicacion de transmición"!
-        <span>Welcome, <span th:text="${user.fullname}"></span>!</span>
-
+        <span style="font-size: 30px" th:text="${user.fullname}"></span>, Bienvenido a VSTR ¡Tu aplicación de transmisión!
     </div>
 
     <div id="overlay"></div>
 
-    <div id="mensaje" >
+    <div id="mensaje">
         <p id="mensaje-texto"></p>
     </div>
 
-    <h1>Página de contenidos y transmisiones</h1>
-        <div class="con-scroll">
-            <div id="miCarrusel" class="carrusel">
-                <div class="slide">
-                    <img src="https://phantom-elmundo.unidadeditorial.es/6200fb89309fefeaa27b958e6294bf0e/resize/473/f/webp/assets/multimedia/imagenes/2022/07/30/16591757825079.jpg" alt="Imagen 1">
-                </div>
-                <div class="slide">
-                    <img src="https://media.revistagq.com/photos/63e4f125df9a2fddd35516fc/16:9/w_1600,c_limit/peliculas-disney-secuelas-toy-story-frozen.jpg" alt="Imagen 2">
-                </div>
-                <div class="slide">
-                    <img src="https://www.clara.es/medio/2022/06/07/mejores-peliculas-romanticas-1225_d01b6bfc_1225x740.jpg" alt="Imagen 3">
-                </div>
-            </div>
-            <button id="siguiente"><i class="bx bx-chevron-right"></i></button>
-            <button id="anterior"><i class="bx bx-chevron-left"></i></button>
-        </div>
-    <br> <br>
-    <hr>En esta seccion se mostraran Usuarios que estan transmitiendo y en que plataforma,
-    <br>este solo es una seccion de informacion, el usuario que tranmite podra poner el link de acceso donde
-    <br>
-    <hr> la pueden visializar.
-    <hr>En futuras actulización se podra ver en esta seccion las transmisiones.
-    </section>
+    <h1>Página de Contenidos y Transmisiones</h1>
+
+    <!-- Video introductivo -->
+    <div class="video-container">
+        <video autoplay muted loop id="introVideo">
+            <source src="video/VSTR.mp4" type="video/mp4">
+            Tu navegador no soporta la reproducción de video.
+        </video>
+    </div>
+
+    <br><br>
+
+    <hr>
+</section>
+<section class="information">
+    <p>En esta sección se mostrarán los usuarios que están transmitiendo y en qué plataforma.</p>
+    <p>Esta es solo una sección de información; el usuario que transmite podrá añadir el enlace de acceso para que los espectadores lo puedan visualizar.</p>
+    <p>En futuras actualizaciones se podrán ver las transmisiones en esta sección.</p>
+</section>
+
 
 
 <script th:inline="javascript">

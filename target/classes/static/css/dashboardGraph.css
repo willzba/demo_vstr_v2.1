@@ -1,0 +1,99 @@
+/* contenidoindex.css */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #444;
+}
+
+span {
+    /*font-size: 1.2rem;*/
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #ddd;
+    margin: 20px 0;
+}
+
+.contenidos {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.contenidos p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+canvas {
+    margin: 0 auto;
+    display: block;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    transition: transform 0.3s ease-in-out;
+}
+
+canvas:hover {
+    transform: scale(1.05); /* Animación al hacer hover */
+}
+.contenidos {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stats-section {
+    margin: 20px 0;
+}
+
+hr {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* contenidoindex.css */
+
+/* Estilos para pantallas grandes */
+@media (min-width: 768px) {
+    .contenidos {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+    }
+
+    h1 {
+        grid-column: span 2;
+        font-size: 3rem;
+    }
+
+    canvas {
+        grid-column: span 2;
+        margin: 0 auto;
+    }
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+    .contenidos {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    canvas {
+        width: 100%;
+        height: auto;
+    }
+}
+
+
