@@ -17,6 +17,9 @@
     */ background-color: #EAFAF1;
     transition: all 0.5s ease;
   }
+span {
+  font-size: 1.2rem;
+}
   .navbar {
     position: fixed;
     top: 0;
@@ -26,7 +29,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 50px;
+    padding: 12px 50px;
     z-index: 1000;
     box-shadow: 0 0 2px var(transparent);
   }
@@ -67,7 +70,7 @@
     position: relative;
   }
   .menu_content #login{
-    padding-top: 200px;
+    padding-top: 180px;
   }
   .menu_title {
     margin: 15px 0;
@@ -96,9 +99,9 @@
   }
   .navlink_icon {
     position: relative;
-    font-size: 22px;
+    font-size: 20px;
     min-width: 50px;
-    line-height: 40px;
+    line-height: 38px;
     display: inline-block;
     text-align: center;
     border-radius: 6px;

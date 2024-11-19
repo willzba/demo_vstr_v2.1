@@ -37,10 +37,14 @@ public class ConfigurationSecurity {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		
-		http.csrf(AbstractHttpConfigurer::disable)
+		http /*.csrf(AbstractHttpConfigurer::disable)*/
 				
 				.authorizeHttpRequests(request -> request.requestMatchers("/admin-page","/nav_admin")
-						.hasAuthority("ADMIN").requestMatchers("/user-page","/nav_user","/user_page/**").hasAuthority("USER")
+						.hasAuthority("ADMIN").requestMatchers("/user-page/service","/nav_user","/user_page/**","/dashboard",
+								"/transmisiones**","/transmision-activa**","/iniciar-transmision/**","/cargar-video",
+								"/cargar-video/list","user_page/videos-publicos","/user-videos",
+								"/user_page/transmision","/pagina-iniciar-transmision/**",
+								"/actualizar-transmision-a-vivo","/transmisiones","/transmision/").hasAuthority("USER")
 						.requestMatchers("/registration", "/css/**","/verify","/verify_success").permitAll()
 						.anyRequest().authenticated())
 				

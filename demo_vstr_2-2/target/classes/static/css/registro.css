@@ -124,7 +124,7 @@ body{
     background: #989bbe46;
     border-radius: 20px;
     overflow: hidden;
-    
+
 }
 
 .item{
@@ -142,7 +142,7 @@ body{
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    
+
 }
 
 .item .logo{
@@ -155,9 +155,9 @@ body{
     position:fixed;
     width: 8%;
     top: 8px;
-    left: 125px;
+    left: 95px;
     margin-left: 150px;
-    padding-left: 0px;  
+    padding-left: 0px;
     background-color: #ffffff83;
     border-radius: 50%;
 }
@@ -167,9 +167,13 @@ body{
     line-height: 1;
 }
 
-.text-item p{ 
+.text-item h2{
+    margin: 22px 0;
+}
+
+.text-item p{
     font-size: 16px;
-    margin: 20px 0;
+    margin: 5px 0;
 }
 
 .social-icon a{
@@ -303,4 +307,166 @@ body{
 
 .create-account p a:hover{
     text-decoration: underline;
+}
+
+@media (min-width: 1200px) and (max-width: 1600px) {
+
+    .container{
+        position: absolute;
+        left: 40%;
+        top: 44%;
+        transform: translate(-40%,-40%);
+        width: 80%;
+        height: 500px;
+        margin-top: 20px;
+        background: #989bbe46;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+}
+
+@media (min-width: 950px) {
+    .item .logo img{
+       display: block;
+        width: 7.2%;
+        top: 0;
+        left:9em;
+        background-color: #ffffff83;
+        border-radius: 50%;
+        margin-block-start: 0.83em;
+        margin-block-end: 0.83em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        unicode-bidi: isolate;
+    }
+}
+
+@media (min-width: 850px) and (max-width: 1200px) {
+
+    .container{
+        position: absolute;
+        left: 40%;
+        top: 44%;
+        transform: translate(-40%,-40%);
+        width: 90%;
+        height: 500px;
+        margin-top: 20px;
+        background: #989bbe46;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    .item{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 55%;
+        height: 100%;
+        color: #fff;
+        background: #7da0ca5e;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+
+        padding: 80px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+
+    }
+
+    .item .logo img{
+        display: block;
+        width: 7.5%;
+        top: 0;
+        left:9em;
+        background-color: #ffffff83;
+        border-radius: 50%;
+        margin-block-start: 0.80em;
+        margin-block-end: 0.80em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        unicode-bidi: isolate;
+    }
+
+    .text-item{
+        font-size: 35px;
+        line-height: 1;
+    }
+
+    .text-item h2{
+        margin: 22px 0;
+    }
+
+    .text-item p{
+        font-size: 16px;
+        margin: 5px 0;
+    }
+
+    .container .login-section{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: calc(103% - 58%);
+        height: 100%;
+        color: #fff;
+    }
+}
+
+@media (min-width: 760px) and (max-width: 850px) {
+
+    .container{
+        position: absolute;
+        left: 40%;
+        top: 44%;
+        transform: translate(-40%,-40%);
+        width: 85%;
+        height: 500px;
+        margin-top: 20px;
+        background: #989bbe46;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .item{
+        position: absolute;
+        top: 0;
+        left: -50px;
+        width: 56%;
+        height: 100%;
+        color: #fff;
+        background: #7da0ca5e;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+
+        padding: 80px;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+
+    }
+
+    .item .logo img{
+        position:fixed;
+        width: 8%;
+        top: 8px;
+        left: 95px;
+        margin-left: 20px;
+        padding-left: 0px;
+        background-color: #ffffff83;
+        border-radius: 50%;
+    }
+
+    .text-item{
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .text-item h2{
+        margin: 22px 0;
+    }
+
+    .text-item p{
+        font-size: 16px;
+        margin: 5px 0;
+    }
+
 }

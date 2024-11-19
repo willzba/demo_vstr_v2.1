@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Transmisiones Activas</title>
+  <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+  <style>
+    .transmision-activa {
+      margin: 70px 100px;
+      padding: 20px 100px;
+      border: 2px solid #4CAF50;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .transmision-activa h2 {
+      color: #4CAF50;
+    }
+    .transmision-activa a {
+      font-size: 1.2em;
+      color: #333;
+      text-decoration: none;
+      background-color: #f1f1f1;
+      padding: 5px 20px;
+      border-radius: 5px;
+    }
+    .transmision-activa a:hover {
+      background-color: #ddd;
+    }
+    .no-transmision {
+      margin: 90px 100px 100px  ;
+      padding: 20px 100px ;
+      border: 2px solid #f44336;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .no-transmision h2 {
+      color: #f44336;
+    }
+  </style>
+</head>
+<body>
+<nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
+<h1>Transmisiones Activas</h1>
+
+<div th:if="${transmisionActiva}" class="transmision-activa">
+  <h2>Transmisión en Vivo: <span th:text="${transmisionActiva.titulo}">Título</span></h2>
+  <a th:href="@{'/transmision/' + ${transmisionActiva.id}}">Ver Transmisión</a>
+</div>
+
+<div th:if="${#lists.isEmpty(transmisionActiva)}" class="no-transmision">
+  <h2>No hay transmisiones activas en este momento.</h2>
+</div>
+<div>
+  <a th:href="@{/videos-publicos}" style="padding-left: 45%">Ir a Inicio</a>
+</div>
+</body>
+</html>

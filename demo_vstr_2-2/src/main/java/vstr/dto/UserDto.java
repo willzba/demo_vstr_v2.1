@@ -24,6 +24,9 @@ public class UserDto {
 		return fullname;
 	}
 
+	public UserDto() {
+	}
+
 	public void setFullname(String fullname) {
 		this.fullname = fullname;
 	}

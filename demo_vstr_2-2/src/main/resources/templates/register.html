@@ -11,6 +11,44 @@
         <link rel="stylesheet" th:href="@{../css/registro.css}">
           <link rel="stylesheet" th:href="@{/css/animateletra.css}">
         <title>Registro de usuarios</title>
+
+          <style>
+              .toast-message {
+                  position: fixed;
+                  top: 20px;
+                  right: 20px;
+                  background-color: #f0ad4e;
+                  color: white;
+                  padding: 15px 20px;
+                  border-radius: 5px;
+                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  z-index: 1000;
+                  animation: fadeIn 0.5s ease;
+              }
+
+              .toast-message button.close-toast {
+                  background: none;
+                  border: none;
+                  color: white;
+                  font-size: 18px;
+                  cursor: pointer;
+              }
+
+              @keyframes fadeIn {
+                  from {
+                      opacity: 0;
+                      transform: translateY(-20px);
+                  }
+                  to {
+                      opacity: 1;
+                      transform: translateY(0);
+                  }
+              }
+
+          </style>
       </head>
       <body>
         <!--NVBAR-->
@@ -34,9 +72,9 @@
 
         <div class="container">
             <div class="item">
-                <h2 class="logo"><img src="https://i.pinimg.com/736x/46/8c/02/468c02779a5de6b9601dde8b0bd9f551.jpg" alt="logo vstr" srcset="">VSTR</h2>
+                <h2 class="logo"><img src="https://i.pinimg.com/736x/46/8c/02/468c02779a5de6b9601dde8b0bd9f551.jpg" alt="logo vstr" srcset="logo vstr">VSTR</h2>
                 <div class="text-item">
-                    <h2>Inscríbete!<br><span class="letra">Video Style Stream</span></h2>
+                    <h2>Inscríbete!<br><span class="letra">Video Stream Theater</span></h2>
                     <p>Edíta tus videos de manera SENCILLA y RÁPIDA, añadiendo efectos, transiciones, texto y más para darles un toque profesional.</p>
                     <div class="social-icon">
                         <a href="#"><i class="ri-twitch-fill"></i></a>
@@ -54,8 +92,9 @@
                          role="form"
                          th:object="${user}"
                         >
-                        <div class="message" th:if="${message != null}">
-                           [[${message}]]
+                        <div class="toast-message" th:if="${message != null}">
+                            <span th:text="${message}"></span>
+                            <button class="close-toast" onclick="closeToast()">X</button>
                         </div>
 
                         <div th:if="${error}" style="color: red;">
@@ -110,6 +149,11 @@
                     icon.classList.add('ri-lock-password-line');
                 }
             });
+
+            function closeToast() {
+                document.querySelector('.toast-message').style.display = 'none';
+            }
+
             /*]]>*/
         </script>
 

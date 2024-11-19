@@ -2,16 +2,44 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verificación de correo electrónico</title>
+    <style>
+        /* Animación de desvanecimiento y deslizamiento */
+        @keyframes fadeInSlideDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Aplicación de la animación al "Hola" */
+        .animated-text {
+            display: inline-block;
+            animation: fadeInSlideDown 2s ease-in-out;
+            font-weight: bold;
+        }
+    </style>
 </head>
-<body>
-    <p>Hola,</p>
-    <p>Te has registrado en VSTR <br>
-        <span>-video style stream-</span>
+<body style="font-family: Arial, sans-serif;color: rgb(2,61,119); background-color: #afaaaa; padding: 20px;">
+<div style="max-width: 600px;text-align:center; margin: 0 auto; background-color: rgba(232,215,215,0.49); padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgb(110,100,100);">
+    <p class="animated-text" style="color: #1b65b6">Hola, 👋</p>
+    <p>Te has registrado en <strong style="color: #1b65b6">V.S.T.R</strong> <br>
+        <span style="font-style: unset; font-size: 20px">video style Theater</span>
     </p>
-    <img src="https://i.pinimg.com/736x/46/8c/02/468c02779a5de6b9601dde8b0bd9f551.jpg" width="120px">
+    <div style="text-align: center; margin: 20px 0;">
+        <!-- Fondo blanco opaco detrás de la imagen con bordes redondeados -->
+        <div style="display: inline-block; padding: 10px; background-color: rgba(179,176,176,0.7); border-radius: 50%;">
+            <img src="http://3.17.147.201/verify" width="120px" alt="VSTR logo" style="border-radius: 50%;">
+        </div>
+    </div>
     <p>Tu código de verificación es: <strong th:text="${otp}"></strong></p>
     <p>Gracias,</p>
     <p>Equipo de verificación</p>
+</div>
 </body>
 </html>

@@ -6,22 +6,117 @@
 
     <title>Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboardGraph.css}">
+
+    <style>
+        .contenidos{
+            margin-top: 80px; /* Ajusta este valor según la altura de tu menú de navegación */
+            margin-left: 90px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
 
 <nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
 <section class="contenidos">
-        <h1>pagina de informacion de transmisiones</h1>
+    <div>
+        <h1>Información de Transmisiones</h1>
+        <span>Welcome, <span th:text="${user.fullname}"></span>!</span>
+    </div>
 
-        </div>
-    <br> <br>
-    <hr>En esta seccion se mostraran estadisticas,
-    <br>este solo es una seccion de informacion, hacerca de la transmision como puede ser la cantidad de ususarios conectados
-    <br>
-    <hr> y podran hacer analicis hacerca de los comentarios y demas.
-    <hr>En futuras actulización se agregan estas funciones.
-    </section>
+    <div class="stats-section">
+        <canvas id="myChart" width="400" height="200"></canvas>
+    </div>
+
+    <p>En esta sección se mostrarán estadísticas, como:</p>
+
+    <table>
+        <tr>
+            <td>item</td>
+            <td>Descripción</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>La cantidad de usuarios conectados.</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Análisis de comentarios.</td>
+        </tr>
+    </table>
+
+    <p>=> "En futuras actualizaciones se agregarán funciones adicionales."<=</p>
+</section>
+
+
 
 <script th:src="@{/js/ContenidoIndex.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script th:inline="javascript">
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar', // Tipo de gráfico (puede ser 'line', 'bar', 'pie', etc.)
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'], // Ejemplo de etiquetas
+            datasets: [{
+                label: 'Usuarios Conectados', // Etiqueta del gráfico
+                data: [50, 60, 70, 80, 90, 100], // Datos de ejemplo
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true, // Hace el gráfico responsivo
+            scales: {
+                y: {
+                    beginAtZero: true // Asegura que el eje Y comience en 0
+                }
+            }
+        }
+    });
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+            datasets: [{
+                label: 'Usuarios Conectados',
+                data: [50, 60, 70, 80, 90, 100],
+                backgroundColor: '#42a5f5',
+                borderColor: '#1e88e5',
+                borderWidth: 1,
+                hoverBackgroundColor: '#64b5f6',
+                hoverBorderColor: '#2196f3'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+</script>
+
 </body>
 </html>

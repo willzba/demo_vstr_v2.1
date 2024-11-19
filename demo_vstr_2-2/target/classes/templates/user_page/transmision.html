@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${transmision.titulo}">Detalle de Transmisión</title>
+    <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .contenedor{
+            padding-top: 70px;
+            padding-left: 50px;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+        #remoteVideo,#remoteScreen {
+            width: 55%;
+            float: left;
+            margin-left: 5%;
+            /*transform: scaleX(-1);*/
+        }
+        #chat {
+            position: absolute;
+            width: 20%;
+            float: right;
+            margin-left: 70%;
+            background-color: transparent;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #controls {
+            margin: 20px;
+            text-align: center;
+        }
+        .reaction-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+        }
+        .reaction {
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reaction:hover {
+            transform: scale(1.3);
+        }
+        #messages {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: transparent;
+        }
+        #messageInput {
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+
+</head>
+<body>
+<nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
+<section class="contenedor">
+<h2 th:text="${transmision.titulo}">Título de Transmisión</h2>
+    <audio id="remoteAudio" STYLE="margin-left: 80px" autoplay controls></audio>
+    <div id="video-stream">
+        <video id="remoteVideo" controls autoplay></video>
+    <div class="reaction-container" >
+        <span class="reaction" onclick="sendReaction('👍')">👍</span>
+        <span class="reaction" onclick="sendReaction('❤️')">❤️</span>
+        <span class="reaction" onclick="sendReaction('😂')">😂</span>
+        <span class="reaction" onclick="sendReaction('👏')">👏</span>
+    </div>
+
+    <!--<video id="remoteScreen" controls autoplay muted></video>-->
+    <!--<div class="reaction-container">
+        <span class="reaction" onclick="sendReaction('👍')">👍</span>
+        <span class="reaction" onclick="sendReaction('❤️')">❤️</span>
+        <span class="reaction" onclick="sendReaction('😂')">😂</span>
+        <span class="reaction" onclick="sendReaction('👏')">👏</span>
+    </div>-->
+</div>
+
+<div id="chat">
+    <h3>Chat en Vivo</h3>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Escribe un mensaje..."/>
+    <button onclick="sendMessage()" style="position: relative; margin-top: 25px">Enviar</button>
+</div>
+
+<div style="clear: both;"></div>
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+    // Variables para WebRTC
+    let peerConnection;
+    const config = {
+        iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' }
+        ]
+    };
+
+    // Configurar WebSocket para señalización
+    var socket = new SockJS('https://7084-186-102-90-120.ngrok-free.app/ws');
+    var stompClient = Stomp.over(socket);
+
+    // Generar un UUID para el viewer
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    const viewerId = generateUUID();
+
+    stompClient.connect({}, function (frame) {
+        console.log('Conectado: ' + frame);
+        stompClient.subscribe('/topic/chat', function (message) {
+            showMessage(JSON.parse(message.body));
+        });
+        stompClient.subscribe('/topic/webrtc', function (message) {
+            handleWebRTCMessage(JSON.parse(message.body));
+        });
+
+        // Solicitar conexión al streamer
+        stompClient.send("/app/webrtc.sendMessage", {}, JSON.stringify({
+            'from': viewerId,
+            'to': 'streamer',
+            'type': 'offerRequest',
+            'payload': null
+        }));
+        console.log('Solicitud de oferta enviada al streamer.');
+    });
+
+    function sendMessage() {
+        var messageContent = document.getElementById('messageInput').value;
+        if (messageContent.trim() !== '') {
+            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+                'content': messageContent
+            }));
+            document.getElementById('messageInput').value = '';
+        }
+    }
+
+    function showMessage(message) {
+        var messages = document.getElementById('messages');
+        var messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+
+        var fromElement = document.createElement('span');
+        fromElement.classList.add('from');
+        fromElement.textContent = message.from;
+
+        var timestampElement = document.createElement('span');
+        timestampElement.classList.add('timestamp');
+        timestampElement.textContent = "(" + message.timestamp + ")";
+
+        var contentElement = document.createElement('span');
+        contentElement.classList.add('content');
+        contentElement.textContent = ": " + message.content;
+
+        messageElement.appendChild(fromElement);
+        messageElement.appendChild(timestampElement);
+        messageElement.appendChild(contentElement);
+        messages.appendChild(messageElement);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    // Manejar mensajes de señalización WebRTC
+    function handleWebRTCMessage(message) {
+        console.log('Mensaje WebRTC recibido en viewer:', message);
+        if (message.type === 'offer') {
+            // Crear conexión peer
+            peerConnection = new RTCPeerConnection(config);
+            console.log('Creando RTCPeerConnection para el streamer.');
+
+            // Manejar candidatos ICE
+            peerConnection.onicecandidate = event => {
+                if (event.candidate) {
+                    console.log('Enviando candidato ICE:', event.candidate);
+                    stompClient.send("/app/webrtc.sendMessage", {}, JSON.stringify({
+                        'from': viewerId,
+                        'to': 'streamer',
+                        'type': 'candidate',
+                        'payload': JSON.stringify(event.candidate)
+                    }));
+                    console.log('Candidato ICE enviado al streamer.');
+                }
+            };
+
+            // Manejar flujo remoto
+            /*peerConnection.ontrack = event => {
+                console.log('Flujo remoto recibido del streamer.', event.track.kind);
+                console.log('Track label:', event.track.label);
+
+                // Si es una pista de video (puede ser pantalla o cámara)
+                if (event.track.kind === 'video') {
+                    const stream = event.streams[0];
+
+                    // Comprobar si la pista corresponde a la pantalla compartida o a la cámara
+                    const isScreenTrack = event.track.label.toLowerCase().includes('screen');
+                    const remoteScreenElement = document.getElementById('remoteScreen');
+                    const remoteVideoElement = document.getElementById('remoteVideo');
+
+                    if (isScreenTrack) {
+                        // Asignar esta pista al elemento de pantalla compartida
+                        console.log('Asignando la pista al remoteScreen');
+                        if (!remoteScreenElement.srcObject) {
+                            remoteScreenElement.srcObject = new MediaStream([event.track]);
+                        } else {
+                            // Añadir la pista a la srcObject existente si no está ya
+                            const existingTracks = remoteScreenElement.srcObject.getTracks();
+                            if (!existingTracks.some(track => track.id === event.track.id)) {
+                                remoteScreenElement.srcObject.addTrack(event.track);
+                            } else {
+                                console.warn('La pista de pantalla ya está asignada.');
+                            }
+                        }
+
+                        // Reproducir la pantalla compartida automáticamente
+                        remoteScreenElement.play().catch(error => console.error('Error al reproducir remoteScreen:', error));
+
+                    } else {
+                        // Asignar esta pista al elemento de cámara
+                        console.log('Asignando la pista al remoteVideo');
+                        if (!remoteVideoElement.srcObject) {
+                            remoteVideoElement.srcObject = new MediaStream([event.track]);
+                        } else {
+                            // Añadir la pista a la srcObject existente si no está ya
+                            const existingTracks = remoteVideoElement.srcObject.getTracks();
+                            if (!existingTracks.some(track => track.id === event.track.id)) {
+                                remoteVideoElement.srcObject.addTrack(event.track);
+                            } else {
+                                console.warn('La pista de cámara ya está asignada.');
+                            }
+                        }
+
+                        // Reproducir la cámara automáticamente
+                        remoteVideoElement.play().catch(error => console.error('Error al reproducir remoteVideo:', error));
+                    }
+                }
+            };*/
+            // Manejar flujo remoto 1
+            /*peerConnection.ontrack = event => {
+                console.log('Flujo remoto recibido del streamer.');
+                var remoteVideo = document.getElementById('remoteVideo');
+                if (remoteVideo.srcObject !== event.streams[0]) {
+                    remoteVideo.srcObject = event.streams[0];
+                    console.log('Asignado el flujo remoto al video.');
+                }
+            };*/
+
+            // Manejar flujo remoto 2
+            peerConnection.ontrack = event => {
+                console.log('Flujo remoto recibido del streamer.', event.track.kind);
+                console.log('Track label:', event.track.label);
+
+                const remoteVideoElement = document.getElementById('remoteVideo');
+
+                // Si es una pista de video (puede ser cámara o pantalla compartida)
+                if (event.track.kind === 'video') {
+                    const stream = event.streams[0];
+                    const isScreenTrack = event.track.label.toLowerCase().includes('screen');
+
+                    // Si la pista es de pantalla compartida
+                    if (isScreenTrack) {
+                        console.log('Stream: Pantalla compartida');
+
+                        // Si ya existe un srcObject, reemplazar la pista de la cámara por la de la pantalla
+                        if (!remoteVideoElement.srcObject) {
+                            remoteVideoElement.srcObject = new MediaStream([event.track]);
+                        } else {
+                            const existingTracks = remoteVideoElement.srcObject.getTracks();
+                            // Reemplazamos la pista de video de la cámara con la pantalla compartida
+                            existingTracks.forEach(track => {
+                                if (track.kind === 'video') {
+                                    remoteVideoElement.srcObject.removeTrack(track);
+                                }
+                            });
+                            remoteVideoElement.srcObject.addTrack(event.track);  // Agregamos la nueva pista de pantalla
+                        }
+
+                        // Reproducir la pantalla compartida
+                        remoteVideoElement.play().catch(error => console.error('Error al reproducir remoteVideo:', error));
+
+                    } else {
+                        console.log('Stream: Cámara');
+
+                        // Si la pista no es de pantalla, es de cámara
+                        if (!remoteVideoElement.srcObject) {
+                            remoteVideoElement.srcObject = new MediaStream([event.track]);
+                        } else {
+                            const existingTracks = remoteVideoElement.srcObject.getTracks();
+                            // Reemplazamos la pista de pantalla por la de la cámara
+                            existingTracks.forEach(track => {
+                                if (track.kind === 'video') {
+                                    remoteVideoElement.srcObject.removeTrack(track);
+                                }
+                            });
+                            remoteVideoElement.srcObject.addTrack(event.track);  // Agregamos la nueva pista de cámara
+                        }
+
+                        // Reproducir la cámara
+                        remoteVideoElement.play().catch(error => console.error('Error al reproducir remoteVideo:', error));
+                    }
+                }
+
+                // Manejar el audio (si lo hay)
+                if (event.track.kind === 'audio') {
+                    const remoteAudioElement = document.getElementById('remoteAudio');
+                    if (!remoteAudioElement.srcObject) {
+                        remoteAudioElement.srcObject = new MediaStream([event.track]);
+                    }
+                }
+            };
+
+
+            // Configurar la descripción remota (offer)
+            peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(message.payload)))
+                .then(() => {
+                    console.log('Descripción remota (offer) establecida.');
+                    return peerConnection.createAnswer();
+                })
+
+                .then(answer => peerConnection.setLocalDescription(answer))
+                .then(() => {
+                    console.log('Respuesta (answer) creada y establecida.');
+                    stompClient.send("/app/webrtc.sendMessage", {}, JSON.stringify({
+                        'from': viewerId,
+                        'to': 'streamer',
+                        'type': 'answer',
+                        'payload': JSON.stringify(peerConnection.localDescription)
+                    }));
+                    console.log('Respuesta (answer) enviada al streamer.');
+                })
+                .catch(e => {
+                    console.error('Error al manejar la oferta:', e);
+                    alert('Error al establecer la conexión de video.');
+                });
+        } else if (message.type === 'candidate') {
+            const candidate = new RTCIceCandidate(JSON.parse(message.payload));
+            if (peerConnection) {
+                peerConnection.addIceCandidate(candidate)
+                    .then(() => {
+                        console.log('Candidato ICE añadido al peerConnection.');
+                    })
+                    .catch(e => console.error('Error al añadir el candidato ICE:', e));
+            }
+        } else if (message.type === 'start') {
+            console.log('El streamer ha iniciado el streaming.');
+        } else if (message.type === 'stop') {
+            if (peerConnection) {
+                peerConnection.close();
+                peerConnection = null;
+                console.log('Streaming detenido por el streamer.');
+            }
+            var remoteVideo = document.getElementById('remoteVideo');
+            var remoteScreen = document.getElementById('remoteScreen');
+            remoteVideo.srcObject = null;
+            remoteScreen.srcObject = null;
+            alert('El streamer ha detenido la transmisión.');
+        }
+    }
+
+    // Función para enviar reacciones con emojis
+    function sendReaction(reaction) {
+        stompClient.send("/app/chat.sendReaction", {}, JSON.stringify({
+            'from': viewerId,
+            'reaction': reaction
+        }));
+        console.log('Reacción enviada: ' + reaction);
+    }
+</script>
+</body>
+</html>

@@ -2,10 +2,13 @@ package vstr.controllers;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -22,12 +25,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import vstr.dto.UserDto;
+import vstr.model.Transmision;
 import vstr.model.User;
-import vstr.model.VerifyToken;
+import vstr.model.Video;
+import vstr.repository.TransmisionRepository;
+import vstr.repository.VideoRepository;
 import vstr.service.EmailExistsException;
 import vstr.service.UserService;
 import vstr.service.VerificationService;
-import vstr.service.VerificationServiceImpl;
+import vstr.service.transmisionService.VideoService;
+
 
 /**
  * Controller responsible for user registration, authentication, and verification.
@@ -49,6 +56,15 @@ public class UserController {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+	@Autowired
+	private VideoService videoService;
+
+	@Autowired
+	private VideoRepository videoRepository;
+
+	@Autowired
+	private TransmisionRepository transmisionRepository;
 
 	@GetMapping("/registration")
 	public String getRegistrationPage(@ModelAttribute("user") UserDto userDto) {
@@ -157,7 +173,7 @@ public class UserController {
 		}
 	}
 
-	@PostMapping("/login")
+	/*@PostMapping("/login")
 	public String login(@RequestParam("email") String email, @RequestParam("password") String password, Model model, Principal principal) {
 		// Verificar si el correo electrónico del usuario está verificado
 		boolean emailVerified = verificationService.isEmailVerified(email);
@@ -180,7 +196,37 @@ public class UserController {
 			model.addAttribute("error", "El correo electrónico no ha sido verificado");
 			return "login"; // Volver a cargar la página de inicio de sesión con un mensaje de error
 		}
+	}*/
+
+	@PostMapping("/login")
+	public String login(@RequestParam("email") String email,
+						@RequestParam("password") String password,
+						Model model,
+						HttpSession session) {
+		// Verificar si el correo electrónico del usuario está verificado
+		boolean emailVerified = verificationService.isEmailVerified(email);
+		if (emailVerified) {
+			// Cargar al usuario por su correo electrónico
+			User user = userService.findByEmail(email);
+			if (user != null && user.getPassword().equals(password)) {
+				// Usuario y contraseña válidos
+
+				// Almacenar el usuario en la sesión
+				session.setAttribute("loggedInUser", user);
+
+				return "redirect:/videos-publicos"; // Redirigir a la página de usuario
+			} else {
+				// Usuario o contraseña incorrectos
+				model.addAttribute("error", "Usuario o contraseña incorrectos");
+				return "login";
+			}
+		} else {
+			// Correo electrónico no verificado
+			model.addAttribute("error", "El correo electrónico no ha sido verificado");
+			return "login";
+		}
 	}
+
 
 	@GetMapping("/login")
 	public String login() {
@@ -192,11 +238,6 @@ public class UserController {
 		return "plantilla/nav_user";
 	}
 
-	@GetMapping("/dashboard")
-	public String dashboard() {
-		return "user_page/dashboard";
-	}
-
 	@GetMapping("/user-page")
 	public String userPage(Model model, Principal principal) {
 		String email = principal.getName(); // Obtener el correo electrónico del usuario autenticado
@@ -204,12 +245,84 @@ public class UserController {
 		if (emailVerified) {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 			model.addAttribute("user", userDetails);
-			return "user"; // Redirigir a la página de usuario
+
+			// Obtiene la transmisión activa
+			Optional<Transmision> transmisionOpt = transmisionRepository.findByEnVivoTrue().stream().findFirst();
+			transmisionOpt.ifPresent(transmision -> model.addAttribute("transmisionActiva", transmision));
+
+
+			// Obtener los videos públicos (suponiendo que tienes un repositorio para ello)
+			List<Video> videosPublicos = videoRepository.findByPublicoTrue(); // Método hipotético en el repositorio de videos
+			model.addAttribute("videosPublicos", videosPublicos);
+
+			// Redirigir a la lista de videos publicos
+			return "user";
 		} else {
 			model.addAttribute("error", "El correo electrónico no ha sido verificado");
 			return "login"; // Volver a cargar la página de inicio de sesión con un mensaje de error
 		}
 	}
+
+	//api para ver el dashboard de forma correcta
+	@GetMapping("/dashboard")
+	public String dashboard(Model model, Principal principal) {
+		try {
+			String email = principal.getName();
+			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+			model.addAttribute("user", userDetails);
+			return "user_page/dashboard"; // Nombre del archivo HTML para la plantilla de dashboard
+		} catch (Exception e) {
+			model.addAttribute("error", "Ocurrió un error al cargar el dashboard");
+			return "error"; // Página de error personalizada si es necesario
+		}
+	}
+
+	//api para ver el mis videos de forma correcta
+	@GetMapping("/user-videos")
+	public String userVideos(Model model, Principal principal) {
+		try {
+			String email = principal.getName();
+			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+			model.addAttribute("user", userDetails);
+
+			return "user_page/videos"; // Nombre del archivo HTML para la plantilla de videos
+		} catch (Exception e) {
+			model.addAttribute("error", "Ocurrió un error al cargar los videos del usuario");
+			return "error"; // Página de error personalizada si es necesario
+		}
+	}
+
+	//api para ver el service de forma correcta
+	@GetMapping("/service")
+	public String service(Model model, Principal principal) {
+		try {
+			String email = principal.getName();
+			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+			model.addAttribute("user", userDetails);
+			return "user_page/service"; // Nombre del archivo HTML para la plantilla de dashboard
+		} catch (Exception e) {
+			model.addAttribute("error", "Ocurrió un error al cargar el dashboard");
+			return "error"; // Página de error personalizada si es necesario
+		}
+	}
+
+	//api para ver el mis videos de forma correcta
+	/*@GetMapping("/pagina-iniciar-transmision")
+	public String userTransmision(Model model, Principal principal) {
+		try {
+			String email = principal.getName();
+			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+			model.addAttribute("user", userDetails);
+
+			return "user_page/iniciar-transmision"; // Nombre del archivo HTML para la plantilla de videos
+		} catch (Exception e) {
+			model.addAttribute("error", "Ocurrió un error al cargar los videos del usuario");
+			return "error"; // Página de error personalizada si es necesario
+		}
+	}*/
+
 
 
 	@GetMapping("admin-page")
@@ -230,6 +343,8 @@ public class UserController {
 	public String nav_admin() {
 		return "plantilla/nav_admin";
 	}
+
+
 
 	//cartelera de bienvenida
 

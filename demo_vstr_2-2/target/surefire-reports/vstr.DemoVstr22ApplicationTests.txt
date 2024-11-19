@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: vstr.DemoVstr22ApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.43 s - in vstr.DemoVstr22ApplicationTests

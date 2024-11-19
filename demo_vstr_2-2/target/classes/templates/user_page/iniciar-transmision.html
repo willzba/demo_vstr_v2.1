@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+  <title>Iniciar Transmisión</title>
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h2 {
+      margin: 0px 0;
+      padding-top: 100px;
+      color: #333;
+      text-align: center;
+    }
+
+    .container-live {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      max-width: 1200px;
+      width: 100%;
+      padding: 30px;
+      box-sizing: border-box;
+      padding-right: 0;
+      gap: 20px;
+    }
+
+    #video-stream {
+      flex: 1;
+      min-width: 300px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      transform: scaleX(-1);
+    }
+
+    #screen-stream {
+      display: none; /* Pantalla compartida inicialmente oculta */
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    #localVideo.small {
+      position: absolute;
+      width: 25%;
+      height: auto;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      border: 2px solid #333;
+    }
+
+    #chat {
+      flex: 0 0 300px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    #controls button {
+      position: relative;
+      padding: 12px 25px;
+      font-size: 1em;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    #controls button.start {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    #controls button.stop {
+      background-color: #f44336;
+      color: white;
+    }
+
+    #controls button.share-screen {
+      background-color: #008CBA;
+      color: white;
+    }
+
+    #controls button:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+
+    #messages {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+    }
+
+    #messageInput {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .notification {
+      display: none;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: rgba(92, 184, 92, 0.8);
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: rgba(76, 174, 76, 0.82);
+    }
+
+    @media (max-width: 768px) {
+      .container-live {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #chat {
+        width: 100%;
+        margin-top: 20px;
+      }
+
+      #video-stream {
+        width: 100%;
+      }
+
+      #screen-stream {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #controls button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
+
+<h2>Iniciar Transmisión en Vivo</h2>
+<div class="container-live">
+      <div id="video-stream">
+        <video id="localVideo" autoplay muted></video>
+      </div>
+
+      <div id="screen-stream">
+        <video id="screenVideo"  autoplay></video>
+      </div>
+
+  <div id="chat">
+    <div id="reactions">
+      <span class="reaction" id="reactionDisplay">=></span>
+    </div>
+    <h3>Chat en Vivo</h3>
+    <div id="messages" style="height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px;"></div>
+    <input type="text" id="messageInput" placeholder="Escribe un mensaje..." />
+    <button onclick="sendMessage()" style="position: initial; margin-top: 20px">Enviar</button>
+  </div>
+</div>
+<div id="controls">
+  <button class="start" onclick="startStreaming()">Iniciar Streaming</button>
+  <input type="hidden" id="transmisionId" th:value="${transmisionId}" />
+  <button class="share-screen" onclick="shareScreen()">Compartir Pantalla</button>
+  <button class="stop" onclick="stopStreaming()">Detener Streaming</button>
+  <button class="camera-toggle" onclick="toggleCamera()">Apagar Cámara</button> <!-- Nuevo botón -->
+</div>
+<div th:if="${mensaje}" class="notification" id="notification" th:text="${mensaje}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+<script>
+
+  // Obtener el token CSRF y el encabezado de CSRF desde la meta etiqueta
+  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content') || 'X-CSRF-TOKEN';
+
+  // Verifica si los valores se obtienen correctamente
+  console.log('CSRF Token:', csrfToken);
+  console.log('CSRF Header Name:', csrfHeader);
+
+  let isStopping = false; // Indicador para saber si se está deteniendo la transmisión
+
+  let cameraEnabled = true;
+
+  // Variables para WebRTC
+  let localStream;
+  let screenStream;
+  let peerConnections = {}; // Mapa de conexiones con cada viewer
+  const config = {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' }
+    ]
+  };
+
+  // Configurar WebSocket para señalización
+  var socket = new SockJS('https://7084-186-102-90-120.ngrok-free.app/ws');
+  var stompClient = Stomp.over(socket);
+
+  stompClient.connect({}, function (frame) {
+    console.log('Conectado: ' + frame);
+    stompClient.subscribe('/topic/chat', function (message) {
+      showMessage(JSON.parse(message.body));
+    });
+    stompClient.subscribe('/topic/webrtc', function (message) {
+      handleWebRTCMessage(JSON.parse(message.body));
+    });
+  });
+
+  function sendMessage() {
+    var messageContent = document.getElementById('messageInput').value;
+    if (messageContent.trim() !== '') {
+      stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+        'content': messageContent,
+        'from': 'Streamer'
+      }));
+      document.getElementById('messageInput').value = '';
+    }
+  }
+
+  function showMessage(message) {
+    // Verificar si el mensaje es un emoji
+    if (['👍', '❤️', '😂', '👏'].includes(message.content)) {
+      document.getElementById('reactionDisplay').textContent = message.content;
+      // Aquí puedes hacer alguna animación o agregar estilos
+    } else {
+      // Manejo normal de mensajes de chat
+      var messages = document.getElementById('messages');
+      var messageElement = document.createElement('div');
+      messageElement.classList.add('message');
+
+      var fromElement = document.createElement('span');
+      fromElement.classList.add('from');
+      fromElement.textContent = message.from;
+
+      var timestampElement = document.createElement('span');
+      timestampElement.classList.add('timestamp');
+      timestampElement.textContent = "(" + message.timestamp + ")";
+
+      var contentElement = document.createElement('span');
+      contentElement.classList.add('content');
+      contentElement.textContent = ": " + message.content;
+
+      messageElement.appendChild(fromElement);
+      messageElement.appendChild(timestampElement);
+      messageElement.appendChild(contentElement);
+      messages.appendChild(messageElement);
+      messages.scrollTop = messages.scrollHeight;
+    }
+  }
+
+  async function startStreaming() {
+    try {
+      const transmisionId = document.getElementById('transmisionId').value;
+
+      // Obtener el stream de video y audio del usuario
+      localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      document.getElementById('localVideo').srcObject = localStream;
+
+      // Obtener el token CSRF desde las meta etiquetas
+      const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+      const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content') || 'X-CSRF-TOKEN';
+
+
+      // Enviar solicitud para actualizar el estado de la transmisión a "en vivo"
+      const response = await fetch('/actualizar-transmision-a-vivo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          [csrfHeader]: csrfToken // Incluye el token CSRF en la cabecera
+        },
+        body: JSON.stringify({ transmisionId: transmisionId })
+      });
+
+      if (response.ok) {
+        alert('Streaming iniciado.');
+      } else {
+        alert('Error al iniciar el streaming.');
+      }
+
+      // Notificar a los viewers que la transmisión ha comenzado
+      stompClient.send("/app/webrtc.sendMessage", {}, JSON.stringify({
+        'from': 'streamer',
+        'to': 'all',
+        'type': 'start',
+        'payload': null
+      }));
+
+    } catch (err) {
+      console.log('CSRF Token:', csrfToken);
+      console.log('CSRF Header Name:', csrfHeader);
+      console.error('Error al acceder a la cámara y micrófono: ', err);
+    }
+  }
+
+  function toggleCamera() {
+    if (localStream) {
+      cameraEnabled = !cameraEnabled;
+      localStream.getVideoTracks().forEach(track => {
+        track.enabled = cameraEnabled;
+      });
+
+      const buttonText = cameraEnabled ? "Apagar Cámara" : "Encender Cámara";
+      document.querySelector(".camera-toggle").textContent = buttonText;
+
+      document.getElementById('localVideo').style.display = cameraEnabled ? 'block' : 'none'; // Mostrar u ocultar video
+    }
+  }
+
+  // compartir pantalla 1
+  /*async function shareScreen() {
+    try {
+      // Captura el flujo de la pantalla
+      const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+
+      // Captura el flujo de la cámara local
+      const cameraStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+      // Asigna el flujo de pantalla al video principal
+      const screenVideoElement = document.getElementById('screenVideo');
+      screenVideoElement.srcObject = screenStream;
+      document.getElementById('screen-stream').style.display = 'block'; // Mostrar la pantalla compartida
+
+      // Asigna el flujo de la cámara al video pequeño dentro del contenedor
+      const localVideoElement = document.getElementById('localVideo');
+      localVideoElement.srcObject = cameraStream;
+
+      // Agregar las pistas de pantalla compartida a todas las conexiones peer activas
+      screenStream.getTracks().forEach(track => {
+        for (let viewerId in peerConnections) {
+          const sender = peerConnections[viewerId].getSenders().find(s => s.track.kind === 'remoteScreen');
+          if (sender) {
+            console.log(`Reemplazando pista de pantalla para el viewer: ${viewerId}`);
+            sender.replaceTrack(track); // Reemplazar la pista de pantalla
+          } else {
+            console.warn(`No se encontró sender para el viewer: ${viewerId}`);
+          }
+        }
+      });
+
+      // Agregar las pistas de la cámara a todas las conexiones peer activas (si deseas enviar la cámara también)
+      cameraStream.getTracks().forEach(track => {
+        for (let viewerId in peerConnections) {
+          const sender = peerConnections[viewerId].getSenders().find(s => s.track.kind === 'remoteVideo');
+          if (sender) {
+            console.log(`Reemplazando pista de cámara para el viewer: ${viewerId}`);
+            sender.replaceTrack(track); // Reemplazar la pista de la cámara
+          } else {
+            console.warn(`No se encontró sender para el viewer: ${viewerId}`);
+          }
+        }
+      });
+
+      // Reducir el tamaño del video de la cámara mientras se comparte la pantalla
+      document.getElementById('localVideo').classList.add('small');
+
+      // Manejar el final de la compartición de pantalla
+      screenStream.getVideoTracks()[0].addEventListener('ended', () => {
+        stopScreenSharing();
+      });
+
+      alert('Compartiendo pantalla y cámara.');
+    } catch (err) {
+      console.error('Error al compartir pantalla: ', err);
+    }
+  }*/
+  //compartir pantall 2
+  async function shareScreen() {
+    try {
+      screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+      document.getElementById('screenVideo').srcObject = screenStream;
+      document.getElementById('screen-stream').style.display = 'block';
+
+      // Notificar a los viewers que el streamer está compartiendo la pantalla
+      stompClient.send("/app/webrtc.sendMessage", {}, JSON.stringify({
+        'from': 'streamer',
+        'to': 'all',
+        'type': 'screenSharingStarted',
+        'payload': null
+      }));
+
+      // Reemplazar las pistas de pantalla en las conexiones de viewers existentes
+      screenStream.getTracks().forEach(track => {
+        for (let viewerId in peerConnections) {
+          const sender = peerConnections[viewerId].getSenders().find(s => s.track.kind === track.kind);
+          if (sender) {
+            sender.replaceTrack(track);
+          } else {
+            peerConnections[viewerId].addTrack(track, screenStream);
+          }
+        }
+      });
+
+      screenStream.getVideoTracks()[0].addEventListener('ended', () => {
+        stopScreenSharing();
+      });
+
+    } catch (err) {
+      console.error('Error al compartir pantalla: ', err);
+    }
+  }
+
+  function stopScreenSharing() {
+    if (screenStream) {
+      screenStream.getTracks().forEach(track => track.stop());
+      document.getElementById('screen-stream').style.display = 'none'; // Ocultar pantalla compartida
+      document.getElementById('localVideo').classList.remove('small'); // Volver a tamaño normal de la cámara
+      screenStream = null;
+      alert('Compartir pantalla detenido.');
+    }
+  }
+
+  function stopStreaming() {
+    if (localStream) {
+      localStream.getTracks().forEach(track => track.stop());
+      if (screenStream) {
+        screenStream.getTracks().forEach(track => track.stop());
+        screenStream = null;
+      }
+
+      // Establecer el indicador para que no se llame a la actualización en beforeunload
+      isStopping = true;
+
+      // Detener la transmisión y enviar mensaje al backend
+      fetch('/detener-transmision', { method: 'GET' })
+              .then(response => {
+                if (response.ok) {
+                  alert('Streaming detenido.');
+                  showNotification('Streaming detenido.'); // Mostrar notificación
+                } else {
+                  alert('Error al detener el streaming.');
+                }
+              });
+
+      // Cerrar todas las conexiones peer
+      for (let viewerId in peerConnections) {
+        peerConnections[viewerId].close();
+        delete peerConnections[viewerId];
+      }
+
+      // Redirigir a la página de detención
+      window.location.href = '/detener-transmision';
+    }
+  }
+
+  function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.innerText = message; // Establecer el texto de la notificación
+    notification.style.display = 'block'; // Mostrar la notificación
+
+    // Ocultar la notificación después de 3 segundos
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 3000);
+  }
+
+  // Manejador para el evento beforeunload
+  window.addEventListener('beforeunload', async (event) => {
+    const transmisionId = document.getElementById('transmisionId').value;
+
+    // Solo realizar la actualización si no se está deteniendo manualmente
+    if (!isStopping) {
+      // Realiza una solicitud para actualizar el estado a false
+      await fetch('/actualizar-transmision-a-no-vivo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          [csrfHeader]: csrfToken // Asegúrate de incluir el token CSRF
+        },
+        body: JSON.stringify({ transmisionId: transmisionId })
+      });
+
+      // Llama a preventDefault para disparar el diálogo de confirmación
+      event.preventDefault();
+      // Configura returnValue para soportar navegadores más antiguos
+      event.returnValue = '¿Estás seguro de que quieres salir?';
+    }
+  });
+
+  // Manejar mensajes de señalización WebRTC
+  function handleWebRTCMessage(message) {
+    console.log('Mensaje WebRTC recibido:', message);
+    if (message.type === 'offerRequest') {
+      const viewerId = message.from; // Asume que 'from' es el ID del viewer
+      console.log('Recibiendo solicitud de oferta de viewer:', viewerId);
+
+      // Crear una nueva conexión peer para el viewer que solicita
+      const peerConnection = new RTCPeerConnection(config);
+      peerConnections[viewerId] = peerConnection;
+
+      // Agregar tracks locales al peer
+      localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+      // Manejar candidatos ICE
+      peerConnection.onicecandidate = event => {
+        if (event.candidate) {
+          stompClient.send("/app/webrtc.sendMessage", {}, JSON.stringify({
+            'from': 'streamer',
+            'to': viewerId,
+            'type': 'candidate',
+            'payload': JSON.stringify(event.candidate)
+          }));
+          console.log('Candidato ICE enviado al viewer:', viewerId);
+        }
+      };
+
+      // Crear oferta (offer)
+      peerConnection.createOffer()
+              .then(offer => peerConnection.setLocalDescription(offer))
+              .then(() => {
+                stompClient.send("/app/webrtc.sendMessage", {}, JSON.stringify({
+                  'from': 'streamer',
+                  'to': viewerId,
+                  'type': 'offer',
+                  'payload': JSON.stringify(peerConnection.localDescription)
+                }));
+                console.log('Oferta enviada al viewer:', viewerId);
+              });
+
+      // Manejar flujo remoto si es necesario
+      peerConnection.ontrack = event => {
+        console.log('Flujo remoto recibido de viewer:', viewerId);
+        // Puedes manejar el flujo remoto aquí si es necesario
+      };
+
+      // Manejar estado de la conexión
+      peerConnection.oniceconnectionstatechange = () => {
+        if (peerConnection.iceConnectionState === 'disconnected') {
+          console.log('Conexión ICE desconectada para viewer:', viewerId);
+          peerConnection.close();
+          delete peerConnections[viewerId];
+        }
+      };
+    } else if (message.type === 'answer') {
+      const viewerId = message.from;
+      const peerConnection = peerConnections[viewerId];
+      if (peerConnection) {
+        peerConnection.setRemoteDescription(new RTCSessionDescription(JSON.parse(message.payload)))
+                .then(() => {
+                  console.log('Respuesta (answer) establecida para viewer:', viewerId);
+                })
+                .catch(e => console.error('Error al establecer la respuesta:', e));
+      }
+    } else if (message.type === 'candidate') {
+      const viewerId = message.from;
+      const peerConnection = peerConnections[viewerId];
+      if (peerConnection) {
+        const candidate = new RTCIceCandidate(JSON.parse(message.payload));
+        peerConnection.addIceCandidate(candidate)
+                .then(() => {
+                  console.log('Candidato ICE añadido para viewer:', viewerId);
+                })
+                .catch(e => console.error('Error al añadir el candidato ICE:', e));
+      }
+    } else if (message.type === 'stop') {
+      // Detener todas las conexiones peer
+      for (let id in peerConnections) {
+        peerConnections[id].close();
+        delete peerConnections[id];
+      }
+      console.log('Streaming detenido por el streamer.');
+    }
+  }
+
+  // Mostrar notificación si existe
+  const notification = document.getElementById('notification');
+  if (notification) {
+    notification.style.display = 'block'; // Mostrar la notificación
+
+    // Ocultar la notificación después de 3 segundos
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 3000);
+  }
+</script>
+</body>
+</html>

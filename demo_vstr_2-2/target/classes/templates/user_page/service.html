@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/contenidoindex.css}">
+    <link rel="stylesheet" th:href="@{/css/user_page_style/contenido_service.css}">
+    <link rel="stylesheet" th:href="@{/css/user_page_style/service_style.css}">
+    <title>Soporte Técnico - Transmisiones en Vivo</title>
+</head>
+<body>
+    <nav th:replace="~{plantilla/nav_user :: nav_user}"></nav>
+
+    <!-- Contenido principal de la página -->
+    <div class="container">
+      <header>
+        <h1>Centro de Soporte</h1>
+        <p>Encuentra ayuda para tus problemas técnicos y preguntas frecuentes</p>
+      </header>
+
+      <section id="services">
+        <h2>Servicios de Soporte</h2>
+        <div class="service-item">
+          <h3>Asistencia Técnica</h3>
+          <p>¿Tienes problemas con tu transmisión? Encuentra soluciones aquí.</p>
+        </div>
+
+        <div class="service-item">
+          <h3>Preguntas Frecuentes (FAQ)</h3>
+          <p>Consulta las respuestas a las preguntas más comunes de nuestros usuarios.</p>
+        </div>
+
+        <div class="service-item">
+          <h3>Guías de Usuario</h3>
+          <p>Aprende cómo configurar tu cámara, micrófono, y mejorar la calidad de tus transmisiones.</p>
+        </div>
+
+        <div class="service-item">
+          <h3>Soporte de Facturación</h3>
+          <p>Resuelve problemas relacionados con tus pagos y suscripciones.</p>
+        </div>
+
+        <div class="service-item">
+          <h3>Reporta un Problema</h3>
+          <p>¿Encontraste un bug? Déjanos saber y lo resolveremos lo antes posible.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Pie de página -->
+    <footer>
+      <p>&copy; 2024 Transmisiones en Vivo. Todos los derechos reservados.</p>
+    </footer>
+
+  <script th:src="@{/js/ContenidoIndex.js}"></script>
+</body>
+</html>

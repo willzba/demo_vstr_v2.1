@@ -1,12 +1,9 @@
 package vstr.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import vstr.model.Role;
@@ -50,6 +47,7 @@ public class CustomerUserDetail implements UserDetails {
 		return user.getFullname();
 	}
 
+
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
@@ -85,5 +83,7 @@ public class CustomerUserDetail implements UserDetails {
 		// TODO Auto-generated method stub
 		return true;
 	}
+
+
 
 }

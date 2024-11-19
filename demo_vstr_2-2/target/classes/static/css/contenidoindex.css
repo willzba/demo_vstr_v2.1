@@ -31,3 +31,37 @@
   #siguiente {
     margin-left: 15rem;
   }
+
+  .information{
+    margin-left: 15rem;
+  }
+
+/* contenidoindex.css */
+.video-container {
+  position: relative;
+  width: 50%;
+  /*padding-bottom: 56.25%;  Mantiene una proporción de 16:9 */
+  /*overflow: hidden;*/
+  background-color: rgba(0, 0, 0, 0.55); /* Fondo negro mientras carga el video */
+  margin: 48px 5px 5px 5px;
+  border-radius: 15px;
+  padding-left: 50px;
+
+}
+
+#introVideo {
+  position: initial;
+  top: 0;
+  left: 0;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta el video para que cubra toda el área sin distorsión */
+}
+
+@media (max-width: 768px) {
+  #introVideo {
+    height: auto;
+    width: 100%;
+  }
+}

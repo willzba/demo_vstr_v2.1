@@ -1,0 +1,25 @@
+.container {
+    margin-top: 50px; /* Ajusta este valor según la altura de tu menú de navegación */
+    margin-left: 80px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+header {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+}
+
+.service-item {
+    margin: 15px 0;
+
+}
+
+footer {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 8px;
+}
